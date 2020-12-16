@@ -48,3 +48,65 @@ curl https://user-info.herokuapp.com/users/19839091069
 ## Observações importantes 
 - Não inicie o teste sem sanar todas as dúvidas 
 - Iremos executar a aplicação para testá-la, cuide com qualquer dependência externa e deixe  claro caso haja instruções especiais para execução do mesmo
+
+## Solução
+
+### Decisões
+
+- **Java 11** é a última versão de suporte longo (LTS)
+- **Gradle** maior velocidade para baixar as dependências, simplicidade da DSL em groovy vs XML do Maven
+- **Spring Boot** é um dos frameworks mais utilizado para criação de microservices atualmente
+- **PostgreSQL** é open source, maduro e com grande utilização
+- **Kafka** é uma das ferramentas mais utilizadas para mensageria e big data
+- **Docker** é uma das formas mais simples para rodar as dependências localmente, além de gerar uma facilidade de deploy em gerenciadores de container
+- **SpotBugs** ferramenta de análise estática de código leve que roda no build do gradle
+
+### Exemplo de endpoints
+
+#### Criar votacao
+```
+POST /v1/votacoes
+{
+    "pauta": "",
+    "duracao": 1
+}
+```
+
+#### Abrir sessão de votação
+```
+PATCH /v1/votacoes/{votacao}
+{
+    "estado": "EM_VOTACAO",
+    "duracao": 10
+}
+```
+
+#### Votar
+```
+POST /v1/votacoes/{votacao}/votos
+{
+    "id": "4cabf124-8d2e-4c9f-bc47-40ba12327b28",
+    "voto": "SIM"
+}
+```
+
+#### Contabilizar votos
+
+```
+PATCH /v1/votacoes/{votacao}
+{
+    "estado": "FINALIZADA"
+}
+resposta:
+{
+    "id": "51a55b51-8a1c-4417-9f69-ec636bf1fb12",
+    "descricao": "",
+    "estado": "FINALIZADA",
+    "duracao": 1,
+    "resultado": {
+        "sim": 120,
+        "nao": 20,
+        "total": 140
+    }
+}
+```
