@@ -31,6 +31,14 @@ public class Resultado {
         return votos;
     }
 
+    public Resultado votarSim() {
+        return new Resultado(this.totalSim + 1, this.totalNao);
+    }
+
+    public Resultado votarNao() {
+        return new Resultado(this.totalSim, this.totalNao + 1);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
