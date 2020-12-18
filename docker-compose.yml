@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  postgresql:
+    image: postgres:12.3-alpine
+    environment:
+      - POSTGRES_USER=votacao
+      - POSTGRES_PASSWORD=votacao123
+      - POSTGRES_DB=votacoes
+    ports:
+      - "5432:5432"

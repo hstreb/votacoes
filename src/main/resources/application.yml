@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: "sistema-votacoes"
+  main:
+    banner-mode: "off"
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/votacoes
+    username: votacao
+    password: votacao123
+    driver-class-name: org.postgresql.Driver
+    validationQuery: SELECT 1
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoints:
+    web:
+      base-path: /management
+      exposure:
+        include: health, info, prometheus
+  endpoint:
+    health:
+      enabled: true
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
+  health:
+    diskspace:
+      enabled: false
+
+logging:
+  level:
+    liquibase:
+      executor: off
+
+associado:
+  url: https://user-info.herokuapp.com

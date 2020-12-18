@@ -1,6 +1,6 @@
-package org.exemplo.votacoes.dominio;
+package org.exemplo.votacoes.dominios;
 
-import org.exemplo.votacoes.dominio.exception.VotacaoException;
+import org.exemplo.votacoes.dominios.exception.VotacaoException;
 import org.junit.jupiter.api.Test;
 
 import java.time.temporal.ChronoUnit;
@@ -8,9 +8,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.exemplo.votacoes.dominio.ConstantesVotacao.*;
-import static org.exemplo.votacoes.dominio.Escolha.SIM;
-import static org.exemplo.votacoes.dominio.EstadoVotacao.*;
+import static org.exemplo.votacoes.dados.ConstantesVotacao.*;
+import static org.exemplo.votacoes.dominios.Escolha.SIM;
+import static org.exemplo.votacoes.dominios.EstadoVotacao.*;
 
 class VotacaoTest {
 

@@ -1,8 +1,13 @@
-package org.exemplo.votacoes.dominio;
+package org.exemplo.votacoes.servicos;
 
-import org.exemplo.votacoes.dominio.exception.VotacaoException;
-import org.exemplo.votacoes.dominio.exception.VotacaoNaoEncontradaException;
-import org.exemplo.votacoes.infraestrutura.AssociadoService;
+import org.exemplo.votacoes.dominios.Resultado;
+import org.exemplo.votacoes.dominios.Votacao;
+import org.exemplo.votacoes.dominios.Voto;
+import org.exemplo.votacoes.dominios.exception.VotacaoException;
+import org.exemplo.votacoes.dominios.exception.VotacaoNaoEncontradaException;
+import org.exemplo.votacoes.repositorios.AssociadoRepository;
+import org.exemplo.votacoes.repositorios.VotacaoRepository;
+import org.exemplo.votacoes.repositorios.VotoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,10 +19,10 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.exemplo.votacoes.dominio.ConstantesVotacao.*;
-import static org.exemplo.votacoes.dominio.Escolha.NAO;
-import static org.exemplo.votacoes.dominio.EstadoVotacao.EM_ANDAMENTO;
-import static org.exemplo.votacoes.dominio.EstadoVotacao.NAO_INICIADA;
+import static org.exemplo.votacoes.dados.ConstantesVotacao.*;
+import static org.exemplo.votacoes.dominios.Escolha.NAO;
+import static org.exemplo.votacoes.dominios.EstadoVotacao.EM_ANDAMENTO;
+import static org.exemplo.votacoes.dominios.EstadoVotacao.NAO_INICIADA;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -30,7 +35,7 @@ class VotacaoServiceTest {
     private VotacaoRepository votacaoRepository;
 
     @Mock
-    private AssociadoService associadoService;
+    private AssociadoRepository associadoRepository;
 
     @Mock
     private VotoRepository votoRepository;
@@ -39,7 +44,7 @@ class VotacaoServiceTest {
     private VotacaoService votacaoService;
 
     @Test
-    void deve_criar_uma_votacao_com_estado_nao_iniciado() {
+    void deve_criar_uma_votacao_com_estado_nao_iniciado() throws VotacaoException {
         given(votacaoRepository.salvar(any()))
                 .willReturn(VOTACAO_NAO_INICIADA);
 
@@ -67,7 +72,7 @@ class VotacaoServiceTest {
     void deve_abrir_uma_votacao() throws VotacaoException {
         given(votacaoRepository.buscarPorId(ID))
                 .willReturn(VOTACAO_NAO_INICIADA);
-        given(votacaoRepository.atualizar(any()))
+        given(votacaoRepository.salvar(any()))
                 .willReturn(VOTACAO_EM_ANDAMENTO);
 
         var votacaoCriada = votacaoService.abrir(ID, Optional.empty());
@@ -103,7 +108,7 @@ class VotacaoServiceTest {
     void deve_encerrar_uma_votacao() throws VotacaoException {
         given(votacaoRepository.buscarPorId(ID))
                 .willReturn(VOTACAO_EM_ANDAMENTO_HORARIO_FINALIZADO);
-        given(votacaoRepository.atualizar(any()))
+        given(votacaoRepository.salvar(any()))
                 .willReturn(VOTACAO_ENCERRADA);
 
         var votacaoEncerrada = votacaoService.encerrar(ID);
@@ -146,7 +151,7 @@ class VotacaoServiceTest {
         var resultadoEsperado = new Resultado(0L, 1L);
         var votacaoEsperada = new Votacao(ID, PAUTA, EM_ANDAMENTO, DURACAO, resultadoEsperado, HORARIO, HORARIO, HORARIO.plusMinutes(DURACAO));
         var votoEsperado = new Voto(ID, ASSOCIADO, NAO);
-        given(associadoService.verificar(ASSOCIADO))
+        given(associadoRepository.verificar(ASSOCIADO))
                 .willReturn(true);
         given(votoRepository.buscarPorVotacaoEAssociado(ID, ASSOCIADO))
                 .willReturn(Optional.empty());
@@ -154,7 +159,7 @@ class VotacaoServiceTest {
                 .willReturn(votoEsperado);
         given(votacaoRepository.buscarPorId(ID))
                 .willReturn(VOTACAO_EM_ANDAMENTO);
-        given(votacaoRepository.atualizar(votacaoEsperada))
+        given(votacaoRepository.salvar(votacaoEsperada))
                 .willReturn(votacaoEsperada);
 
         var votoComputado = votacaoService.votar(ID, ASSOCIADO, NAO);
@@ -172,7 +177,7 @@ class VotacaoServiceTest {
     @Test
     void nao_deve_votar_duas_vezes() throws VotacaoException {
         var votoEsperado = new Voto(ID, ASSOCIADO, NAO);
-        given(associadoService.verificar(ASSOCIADO))
+        given(associadoRepository.verificar(ASSOCIADO))
                 .willReturn(true);
         given(votoRepository.buscarPorVotacaoEAssociado(ID, ASSOCIADO))
                 .willReturn(Optional.of(votoEsperado));
@@ -184,7 +189,7 @@ class VotacaoServiceTest {
 
     @Test
     void nao_deve_votar_quando_nao_habilitado() throws VotacaoException {
-        given(associadoService.verificar(ASSOCIADO))
+        given(associadoRepository.verificar(ASSOCIADO))
                 .willReturn(false);
 
         assertThatThrownBy(() -> votacaoService.votar(ID, ASSOCIADO, NAO))
@@ -195,7 +200,7 @@ class VotacaoServiceTest {
     @Test
     void nao_deve_votar_em_votacao_finalizada() throws VotacaoException {
         var votoEsperado = new Voto(ID, ASSOCIADO, NAO);
-        given(associadoService.verificar(ASSOCIADO))
+        given(associadoRepository.verificar(ASSOCIADO))
                 .willReturn(true);
         given(votoRepository.salvar(any()))
                 .willReturn(votoEsperado);

@@ -1,10 +1,13 @@
-package org.exemplo.votacoes.dominio;
+package org.exemplo.votacoes.dados;
+
+import org.exemplo.votacoes.dominios.Resultado;
+import org.exemplo.votacoes.dominios.Votacao;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-import static org.exemplo.votacoes.dominio.EstadoVotacao.*;
+import static org.exemplo.votacoes.dominios.EstadoVotacao.*;
 
 public class ConstantesVotacao {
 

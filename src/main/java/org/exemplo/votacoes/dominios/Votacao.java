@@ -1,6 +1,6 @@
-package org.exemplo.votacoes.dominio;
+package org.exemplo.votacoes.dominios;
 
-import org.exemplo.votacoes.dominio.exception.VotacaoException;
+import org.exemplo.votacoes.dominios.exception.VotacaoException;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -8,8 +8,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static java.time.LocalDateTime.now;
-import static org.exemplo.votacoes.dominio.EstadoVotacao.EM_ANDAMENTO;
-import static org.exemplo.votacoes.dominio.EstadoVotacao.NAO_INICIADA;
+import static org.exemplo.votacoes.dominios.EstadoVotacao.EM_ANDAMENTO;
+import static org.exemplo.votacoes.dominios.EstadoVotacao.NAO_INICIADA;
 
 public class Votacao {
 

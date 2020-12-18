@@ -1,9 +1,14 @@
-package org.exemplo.votacoes.dominio;
+package org.exemplo.votacoes.servicos;
 
-import org.exemplo.votacoes.dominio.exception.AssociadoNaoHabilitadoException;
-import org.exemplo.votacoes.dominio.exception.VotacaoException;
-import org.exemplo.votacoes.dominio.exception.VotoJaContabilizadoException;
-import org.exemplo.votacoes.infraestrutura.AssociadoService;
+import org.exemplo.votacoes.dominios.Escolha;
+import org.exemplo.votacoes.dominios.Votacao;
+import org.exemplo.votacoes.dominios.Voto;
+import org.exemplo.votacoes.dominios.exception.AssociadoNaoHabilitadoException;
+import org.exemplo.votacoes.dominios.exception.VotacaoException;
+import org.exemplo.votacoes.dominios.exception.VotoJaContabilizadoException;
+import org.exemplo.votacoes.repositorios.AssociadoRepository;
+import org.exemplo.votacoes.repositorios.VotacaoRepository;
+import org.exemplo.votacoes.repositorios.VotoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,17 +20,17 @@ public class VotacaoService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VotacaoService.class);
 
-    private final org.exemplo.votacoes.dominio.VotacaoRepository votacaoRepository;
-    private final AssociadoService associadoService;
-    private final org.exemplo.votacoes.dominio.VotoRepository votoRepository;
+    private final VotacaoRepository votacaoRepository;
+    private final AssociadoRepository associadoRepository;
+    private final VotoRepository votoRepository;
 
-    public VotacaoService(org.exemplo.votacoes.dominio.VotacaoRepository votacaoRepository, AssociadoService associadoService, org.exemplo.votacoes.dominio.VotoRepository votoRepository) {
+    public VotacaoService(VotacaoRepository votacaoRepository, AssociadoRepository associadoRepository, VotoRepository votoRepository) {
         this.votacaoRepository = votacaoRepository;
-        this.associadoService = associadoService;
+        this.associadoRepository = associadoRepository;
         this.votoRepository = votoRepository;
     }
 
-    public Votacao criar(String pauta) {
+    public Votacao criar(String pauta) throws VotacaoException {
         LOGGER.info("Criando nova votação com a pauta: {}", pauta);
         var votacao = new Votacao(pauta);
         votacaoRepository.salvar(votacao);
@@ -37,7 +42,7 @@ public class VotacaoService {
         LOGGER.info("Iniciando nova votação: {}", id);
         var votacao = votacaoRepository.buscarPorId(id)
                 .abrir(duracao);
-        votacaoRepository.atualizar(votacao);
+        votacaoRepository.salvar(votacao);
         LOGGER.info("Votação iniciada: {}", votacao);
         return votacao;
     }
@@ -49,13 +54,13 @@ public class VotacaoService {
         votoRepository.salvar(voto);
         var votacao = votacaoRepository.buscarPorId(idVotacao)
                 .votar(escolha);
-        votacaoRepository.atualizar(votacao);
+        votacaoRepository.salvar(votacao);
         LOGGER.info("Voto computado: {}", voto);
         return voto;
     }
 
     private void validar(String idVotacao, String associado) throws VotacaoException {
-        if (!associadoService.verificar(associado)) {
+        if (!associadoRepository.verificar(associado)) {
             throw new AssociadoNaoHabilitadoException("Associado " + associado + " não habilitado!");
         }
         var jaVotou = votoRepository.buscarPorVotacaoEAssociado(idVotacao, associado)
@@ -68,7 +73,7 @@ public class VotacaoService {
     public Votacao encerrar(String id) throws VotacaoException {
         var votacao = votacaoRepository.buscarPorId(id)
                 .encerrar();
-        votacaoRepository.atualizar(votacao);
+        votacaoRepository.salvar(votacao);
         LOGGER.info("Votação encerrada: {}", votacao);
         return votacao;
     }

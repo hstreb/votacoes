@@ -1,4 +1,4 @@
-package org.exemplo.votacoes.dominio;
+package org.exemplo.votacoes.dominios;
 
 import org.junit.jupiter.api.Test;
 
