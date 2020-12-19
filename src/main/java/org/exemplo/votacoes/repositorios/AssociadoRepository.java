@@ -1,11 +1,11 @@
 package org.exemplo.votacoes.repositorios;
 
-import org.exemplo.votacoes.dominios.exception.VotacaoException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AssociadoRepository {
-    public boolean verificar(String associado) throws VotacaoException {
+
+    public boolean verificar(String associado) {
         return true;
     }
 }

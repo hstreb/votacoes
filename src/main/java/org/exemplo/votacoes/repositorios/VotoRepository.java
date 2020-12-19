@@ -2,9 +2,11 @@ package org.exemplo.votacoes.repositorios;
 
 import org.exemplo.votacoes.dominios.Escolha;
 import org.exemplo.votacoes.dominios.Voto;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Component
 public class VotoRepository {
     private VotoDao votoDao;
 

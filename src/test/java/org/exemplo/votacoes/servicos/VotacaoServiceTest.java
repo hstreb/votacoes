@@ -51,7 +51,7 @@ class VotacaoServiceTest {
         var votacaoCriada = votacaoService.criar(PAUTA);
 
         assertThat(votacaoCriada.getId())
-                .isNotEqualTo(ID);
+                .isEqualTo(ID);
         assertThat(votacaoCriada.getPauta())
                 .isEqualTo(PAUTA);
         assertThat(votacaoCriada.getEstado())
@@ -61,7 +61,7 @@ class VotacaoServiceTest {
         assertThat(votacaoCriada.getResultado())
                 .isEqualTo(RESULTADO);
         assertThat(votacaoCriada.getHorarioCriacao().truncatedTo(ChronoUnit.SECONDS))
-                .isAfter(HORARIO);
+                .isAfterOrEqualTo(HORARIO);
         assertThat(votacaoCriada.getHorarioInicio())
                 .isNull();
         assertThat(votacaoCriada.getHorarioFim())
@@ -90,9 +90,9 @@ class VotacaoServiceTest {
         assertThat(votacaoCriada.getHorarioCriacao().truncatedTo(ChronoUnit.SECONDS))
                 .isEqualTo(HORARIO);
         assertThat(votacaoCriada.getHorarioInicio().truncatedTo(ChronoUnit.SECONDS))
-                .isAfter(HORARIO);
+                .isAfterOrEqualTo(HORARIO);
         assertThat(votacaoCriada.getHorarioFim().truncatedTo(ChronoUnit.SECONDS))
-                .isAfter(votacaoCriada.getHorarioInicio());
+                .isAfterOrEqualTo(votacaoCriada.getHorarioInicio());
     }
 
     @Test
@@ -165,7 +165,7 @@ class VotacaoServiceTest {
         var votoComputado = votacaoService.votar(ID, ASSOCIADO, NAO);
 
         assertThat(votoComputado.getId())
-                .isNotEqualTo(votoEsperado.getId());
+                .isEqualTo(votoEsperado.getId());
         assertThat(votoComputado.getVotacao())
                 .isEqualTo(votoEsperado.getVotacao());
         assertThat(votoComputado.getAssociado())

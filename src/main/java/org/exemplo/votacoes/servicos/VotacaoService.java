@@ -33,30 +33,30 @@ public class VotacaoService {
     public Votacao criar(String pauta) throws VotacaoException {
         LOGGER.info("Criando nova votação com a pauta: {}", pauta);
         var votacao = new Votacao(pauta);
-        votacaoRepository.salvar(votacao);
-        LOGGER.info("Votação criada: {}", votacao);
-        return votacao;
+        var votacaoCriada = votacaoRepository.salvar(votacao);
+        LOGGER.info("Votação criada: {}", votacaoCriada);
+        return votacaoCriada;
     }
 
     public Votacao abrir(String id, Optional<Long> duracao) throws VotacaoException {
         LOGGER.info("Iniciando nova votação: {}", id);
         var votacao = votacaoRepository.buscarPorId(id)
                 .abrir(duracao);
-        votacaoRepository.salvar(votacao);
-        LOGGER.info("Votação iniciada: {}", votacao);
-        return votacao;
+        var votacaoIniciada = votacaoRepository.salvar(votacao);
+        LOGGER.info("Votação iniciada: {}", votacaoIniciada);
+        return votacaoIniciada;
     }
 
     public Voto votar(String idVotacao, String associado, Escolha escolha) throws VotacaoException {
         LOGGER.info("Iniciando novo voto: {}, {}, {}", idVotacao, associado, escolha);
         validar(idVotacao, associado);
         var voto = new Voto(idVotacao, associado, escolha);
-        votoRepository.salvar(voto);
+        var votoComputado = votoRepository.salvar(voto);
         var votacao = votacaoRepository.buscarPorId(idVotacao)
                 .votar(escolha);
         votacaoRepository.salvar(votacao);
-        LOGGER.info("Voto computado: {}", voto);
-        return voto;
+        LOGGER.info("Voto computado: {}", votoComputado);
+        return votoComputado;
     }
 
     private void validar(String idVotacao, String associado) throws VotacaoException {
@@ -73,8 +73,8 @@ public class VotacaoService {
     public Votacao encerrar(String id) throws VotacaoException {
         var votacao = votacaoRepository.buscarPorId(id)
                 .encerrar();
-        votacaoRepository.salvar(votacao);
-        LOGGER.info("Votação encerrada: {}", votacao);
-        return votacao;
+        var votacaoEncerrada = votacaoRepository.salvar(votacao);
+        LOGGER.info("Votação encerrada: {}", votacaoEncerrada);
+        return votacaoEncerrada;
     }
 }

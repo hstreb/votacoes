@@ -110,3 +110,19 @@ resposta:
     }
 }
 ```
+
+curl --header "Content-Type: application/json" \
+--request POST \
+--data '{"pauta":"pauta teste"}' \
+http://localhost:8080/v1/votacoes
+
+
+curl --header "Content-Type: application/json" \
+--request PATCH \
+--data '{"estado":"EM_ANDAMENTO","duracao":1}' \
+http://localhost:8080/v1/votacoes/de5908a4-d649-4d98-aa2f-ba9ab26d02f8
+
+curl --header "Content-Type: application/json" \
+--request POST \
+--data '{"associado":"19839091069","escolha":"SIM"}' \
+http://localhost:8080/v1/votacoes/de5908a4-d649-4d98-aa2f-ba9ab26d02f8/votos

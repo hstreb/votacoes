@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface AssociadoClient {
 
     @GetMapping("/{cpf}")
-    String verificar(@PathVariable("cpf") String cpf);
+    Associado verificar(@PathVariable("cpf") String cpf);
 
 }

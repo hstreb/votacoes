@@ -3,20 +3,20 @@
 - criar projeto base ✔
 - definir contratos REST ✔
 - explicar decisões de tecnologias ✔
-- definir domínios
-  - definir modelos
-  - definir exceptions de negócio
-- criar as regras de negócio em memória
-  - criar votação
-  - abrir sessão de votação
-  - receber votos
-  - contabilizar votos
-- adicionar endpoints
-  - adicionar documentação com base no openapi
-  - adicionar tratamentos de erros com base nas exceptions de negócio
+- definir domínios ✔
+  - definir modelos ✔
+  - definir exceptions de negócio ✔
+- criar as regras de negócio em memória ✔
+  - criar votação ✔
+  - abrir sessão de votação ✔
+  - receber votos ✔
+  - contabilizar votos ✔
+- adicionar endpoints ✔
+  - adicionar documentação com base no openapi ✔
+  - adicionar tratamentos de erros com base nas exceptions de negócio ✔
+- adicionar database real ✔
+  - adicionar suporte a evolução de esquema ✔
 - adicionar chamada real ao serviço de associados
-- adicionar database real
-  - adicionar suporte a evolução de esquema
 - adicionar mensageria
   - escrever votos
   - escrever votação encerrada

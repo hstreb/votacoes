@@ -14,6 +14,9 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
 
+  jackson:
+    default-property-inclusion: non_null
+
 management:
   metrics:
     tags:
@@ -41,3 +44,12 @@ logging:
 
 associado:
   url: https://user-info.herokuapp.com
+
+openapi:
+  titulo: API para gerenciar votações
+  descricao: O serviço expoem endpoints para criação de votações, para iniciar sessões de votação, receber os votos dos associados e contabilizar o resultado.
+  versao: 1
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
