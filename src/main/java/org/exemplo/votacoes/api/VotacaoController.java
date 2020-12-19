@@ -11,6 +11,9 @@ import org.exemplo.votacoes.dominios.exception.VotacaoException;
 import org.exemplo.votacoes.servicos.VotacaoService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.Optional;
+
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
@@ -26,15 +29,15 @@ public class VotacaoController {
     @Operation(summary = "Adiciona uma nova votação", description = "Adiciona uma nova votação no estado 'NAO_INICIADA'")
     @PostMapping
     @ResponseStatus(CREATED)
-    public Votacao criar(@RequestBody CriacaoVotacao votacao) throws VotacaoException {
+    public Votacao criar(@Valid @RequestBody CriacaoVotacao votacao) throws VotacaoException {
         return votacaoService.criar(votacao.getPauta());
     }
 
-    @Operation(summary = "Altera uma votação", description = "Altera uma votação, caso passe o estao 'EM_ANDAMENTO' abre a sessão de votação, se passar o estado 'ENCERRADA' finaliza a votação e contabiliza os votos")
+    @Operation(summary = "Altera uma votação", description = "Altera uma votação, caso passe o estado 'EM_ANDAMENTO' abre a sessão de votação, se passar o estado 'ENCERRADA' finaliza a votação e contabiliza os votos")
     @PatchMapping("/{id}")
-    public Votacao alterar(@PathVariable String id, @RequestBody AlteracaoVotacao votacao) throws VotacaoException {
+    public Votacao alterar(@PathVariable String id, @Valid @RequestBody AlteracaoVotacao votacao) throws VotacaoException {
         if (votacao.getEstado().equals(EstadoVotacao.EM_ANDAMENTO)) {
-            return votacaoService.abrir(id, votacao.getDuracao());
+            return votacaoService.abrir(id, Optional.ofNullable(votacao.getDuracao()));
         }
         return votacaoService.encerrar(id);
     }
@@ -42,7 +45,7 @@ public class VotacaoController {
     @Operation(summary = "Adiciona um novo voto a uma votação", description = "Adiciona um novo voto de um cooperado para uma votação somente quando a votação esta no estado 'EM_ANDAMENTO'")
     @PostMapping("/{id}/votos")
     @ResponseStatus(CREATED)
-    public Voto votar(@PathVariable String id, @RequestBody CriacaoVoto voto) throws VotacaoException {
+    public Voto votar(@PathVariable String id, @Valid @RequestBody CriacaoVoto voto) throws VotacaoException {
         return votacaoService.votar(id, voto.getAssociado(), voto.getEscolha());
     }
 }

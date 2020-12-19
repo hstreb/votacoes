@@ -1,4 +1,4 @@
-package org.exemplo.votacoes.configuracoes;
+package org.exemplo.votacoes.configuracoes.documentacao;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

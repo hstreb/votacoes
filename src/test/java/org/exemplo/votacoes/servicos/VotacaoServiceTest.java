@@ -1,11 +1,15 @@
 package org.exemplo.votacoes.servicos;
 
+import org.exemplo.votacoes.clientes.Associado;
+import org.exemplo.votacoes.clientes.AssociadoClient;
+import org.exemplo.votacoes.clientes.AssociadoStatus;
 import org.exemplo.votacoes.dominios.Resultado;
 import org.exemplo.votacoes.dominios.Votacao;
 import org.exemplo.votacoes.dominios.Voto;
 import org.exemplo.votacoes.dominios.exception.VotacaoException;
 import org.exemplo.votacoes.dominios.exception.VotacaoNaoEncontradaException;
-import org.exemplo.votacoes.repositorios.AssociadoRepository;
+import org.exemplo.votacoes.mensageria.VotacaoProducer;
+import org.exemplo.votacoes.mensageria.VotoProducer;
 import org.exemplo.votacoes.repositorios.VotacaoRepository;
 import org.exemplo.votacoes.repositorios.VotoRepository;
 import org.junit.jupiter.api.Test;
@@ -25,20 +29,29 @@ import static org.exemplo.votacoes.dominios.EstadoVotacao.EM_ANDAMENTO;
 import static org.exemplo.votacoes.dominios.EstadoVotacao.NAO_INICIADA;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class VotacaoServiceTest {
 
     private static final String ASSOCIADO = "74066871097";
+    private static final Associado ASSOCIADO_HABILITADO = new Associado(AssociadoStatus.ABLE_TO_VOTE);
+    private static final Associado ASSOCIADO_NAO_HABILITADO = new Associado(AssociadoStatus.UNABLE_TO_VOTE);
 
     @Mock
     private VotacaoRepository votacaoRepository;
 
     @Mock
-    private AssociadoRepository associadoRepository;
+    private AssociadoClient associadoClient;
 
     @Mock
     private VotoRepository votoRepository;
+
+    @Mock
+    private VotacaoProducer votacaoProducer;
+
+    @Mock
+    private VotoProducer votoProducer;
 
     @InjectMocks
     private VotacaoService votacaoService;
@@ -110,11 +123,14 @@ class VotacaoServiceTest {
                 .willReturn(VOTACAO_EM_ANDAMENTO_HORARIO_FINALIZADO);
         given(votacaoRepository.salvar(any()))
                 .willReturn(VOTACAO_ENCERRADA);
+        doNothing().when(votacaoProducer).enviar(any());
 
         var votacaoEncerrada = votacaoService.encerrar(ID);
 
         assertThat(votacaoEncerrada)
                 .isEqualTo(VOTACAO_ENCERRADA);
+        verify(votacaoProducer, times(1))
+                .enviar(any());
     }
 
     @Test
@@ -151,12 +167,13 @@ class VotacaoServiceTest {
         var resultadoEsperado = new Resultado(0L, 1L);
         var votacaoEsperada = new Votacao(ID, PAUTA, EM_ANDAMENTO, DURACAO, resultadoEsperado, HORARIO, HORARIO, HORARIO.plusMinutes(DURACAO));
         var votoEsperado = new Voto(ID, ASSOCIADO, NAO);
-        given(associadoRepository.verificar(ASSOCIADO))
-                .willReturn(true);
+        given(associadoClient.verificar(ASSOCIADO))
+                .willReturn(ASSOCIADO_HABILITADO);
         given(votoRepository.buscarPorVotacaoEAssociado(ID, ASSOCIADO))
                 .willReturn(Optional.empty());
         given(votoRepository.salvar(any()))
                 .willReturn(votoEsperado);
+        doNothing().when(votoProducer).enviar(any());
         given(votacaoRepository.buscarPorId(ID))
                 .willReturn(VOTACAO_EM_ANDAMENTO);
         given(votacaoRepository.salvar(votacaoEsperada))
@@ -172,13 +189,15 @@ class VotacaoServiceTest {
                 .isEqualTo(votoEsperado.getAssociado());
         assertThat(votoComputado.getEscolha())
                 .isEqualTo(votoEsperado.getEscolha());
+        verify(votoProducer, times(1))
+                .enviar(any());
     }
 
     @Test
     void nao_deve_votar_duas_vezes() throws VotacaoException {
         var votoEsperado = new Voto(ID, ASSOCIADO, NAO);
-        given(associadoRepository.verificar(ASSOCIADO))
-                .willReturn(true);
+        given(associadoClient.verificar(ASSOCIADO))
+                .willReturn(ASSOCIADO_HABILITADO);
         given(votoRepository.buscarPorVotacaoEAssociado(ID, ASSOCIADO))
                 .willReturn(Optional.of(votoEsperado));
 
@@ -189,8 +208,8 @@ class VotacaoServiceTest {
 
     @Test
     void nao_deve_votar_quando_nao_habilitado() throws VotacaoException {
-        given(associadoRepository.verificar(ASSOCIADO))
-                .willReturn(false);
+        given(associadoClient.verificar(ASSOCIADO))
+                .willReturn(ASSOCIADO_NAO_HABILITADO);
 
         assertThatThrownBy(() -> votacaoService.votar(ID, ASSOCIADO, NAO))
                 .isInstanceOf(VotacaoException.class)
@@ -200,15 +219,18 @@ class VotacaoServiceTest {
     @Test
     void nao_deve_votar_em_votacao_finalizada() throws VotacaoException {
         var votoEsperado = new Voto(ID, ASSOCIADO, NAO);
-        given(associadoRepository.verificar(ASSOCIADO))
-                .willReturn(true);
+        given(associadoClient.verificar(ASSOCIADO))
+                .willReturn(ASSOCIADO_HABILITADO);
         given(votoRepository.salvar(any()))
                 .willReturn(votoEsperado);
+        doNothing().when(votoProducer).enviar(any());
         given(votacaoRepository.buscarPorId(ID))
                 .willReturn(VOTACAO_EM_ANDAMENTO_HORARIO_FINALIZADO);
 
         assertThatThrownBy(() -> votacaoService.votar(ID, ASSOCIADO, NAO))
                 .isInstanceOf(VotacaoException.class)
                 .hasMessage("Votação " + ID + " encerrada!");
+        verify(votoProducer, times(1))
+                .enviar(any());
     }
 }

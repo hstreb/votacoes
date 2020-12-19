@@ -2,11 +2,12 @@ package org.exemplo.votacoes.api.entrada;
 
 import org.exemplo.votacoes.dominios.EstadoVotacao;
 
-import java.util.Optional;
+import javax.validation.constraints.NotNull;
 
 public class AlteracaoVotacao {
+    @NotNull(message = "O campo 'estado' não pode ser nulo!")
     private EstadoVotacao estado;
-    private Optional<Long> duracao;
+    private Long duracao;
 
     public EstadoVotacao getEstado() {
         return estado;
@@ -16,11 +17,11 @@ public class AlteracaoVotacao {
         this.estado = estado;
     }
 
-    public Optional<Long> getDuracao() {
+    public Long getDuracao() {
         return duracao;
     }
 
-    public void setDuracao(Optional<Long> duracao) {
+    public void setDuracao(Long duracao) {
         this.duracao = duracao;
     }
 }

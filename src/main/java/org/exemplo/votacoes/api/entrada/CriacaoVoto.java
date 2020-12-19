@@ -2,8 +2,12 @@ package org.exemplo.votacoes.api.entrada;
 
 import org.exemplo.votacoes.dominios.Escolha;
 
+import javax.validation.constraints.NotNull;
+
 public class CriacaoVoto {
+    @NotNull(message = "O campo 'associado' não pode ser nulo!")
     private String associado;
+    @NotNull(message = "O campo 'escolha' não pode ser nulo!")
     private Escolha escolha;
 
     public String getAssociado() {

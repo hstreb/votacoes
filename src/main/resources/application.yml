@@ -16,6 +16,19 @@ spring:
 
   jackson:
     default-property-inclusion: non_null
+    serialization:
+      write_dates_as_timestamps: false
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    producer:
+      aks: all
+      compression-type: gzip
+      retries: 3
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.exemplo.votacoes.configuracoes.kafka.JsonSerializerWithJTM
+      properties.spring.json.add.type.headers: false
 
 management:
   metrics:
@@ -53,3 +66,13 @@ openapi:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+topicos:
+  votacoes:
+    nome: votacoes
+    particoes: 3
+    replicas: 1
+  votos:
+    nome: votos
+    particoes: 3
+    replicas: 1

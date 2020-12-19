@@ -1,4 +1,4 @@
-package org.exemplo.votacoes.configuracoes;
+package org.exemplo.votacoes.configuracoes.erros;
 
 import java.time.LocalDateTime;
 

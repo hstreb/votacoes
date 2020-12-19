@@ -25,10 +25,12 @@ dependencies {
   implementation 'io.micrometer:micrometer-registry-prometheus'
   implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+  implementation 'org.springframework.kafka:spring-kafka'
   runtimeOnly 'org.postgresql:postgresql'
   implementation 'org.liquibase:liquibase-core'
   implementation 'org.springdoc:springdoc-openapi-ui:1.5.1'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
 
 dependencyManagement {
@@ -50,7 +52,7 @@ jacocoTestReport {
   }
   afterEvaluate {
     classDirectories.setFrom(files(classDirectories.files.collect {
-      fileTree(dir: it, exclude: ['**/config/**'])
+      fileTree(dir: it, exclude: ['**/configuracoes/**'])
     }))
   }
 }
