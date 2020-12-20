@@ -52,16 +52,17 @@ curl https://user-info.herokuapp.com/users/19839091069
 ## Solução
 
 ### Decisões
-
-- **Java 11** é a última versão de suporte longo (LTS)
-- **Gradle** maior velocidade para baixar as dependências, simplicidade da DSL em groovy vs XML do Maven
-- **Spring Boot** é um dos frameworks mais utilizado para criação de microservices atualmente
-- **PostgreSQL** é open source, maduro e com grande utilização
-- **Liquibase** foi utilizado para migração de schema do banco de dados, foi escolhido por possuir rollback gratuíto em relação ao flyway
-- **Kafka** é uma das ferramentas mais utilizadas para mensageria e big data
-- **Docker** é uma das formas mais simples para rodar as dependências localmente, além de gerar uma facilidade de deploy em gerenciadores de container
-- **SpotBugs** ferramenta de análise estática de código leve que roda no build do gradle
-- **Gatling** ferramenta de teste de performance que usa DSLs escritas em scala, com grande poder de processamento e geração de relatórios dos testes
+- [java 11](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) é a última versão de suporte longo (LTS)
+- [gradle](http://gradle.org/) foi escolhido pela maior velocidade para baixar as dependências, simplicidade da DSL em groovy vs XML do Maven
+- [Spring Boot](https://spring.io/projects/spring-boot) é um dos frameworks mais utilizado para criação de microservices atualmente
+- [PostgreSQL](https://www.postgresql.org/) é open source, maduro e com grande utilização
+- [Liquibase](https://www.liquibase.org/) foi utilizado para migração de schema do banco de dados, foi escolhido por possuir rollback gratuíto em relação ao flyway
+- [Kafka](https://kafka.apache.org/) é uma das ferramentas mais utilizadas para mensageria e big data
+- [Docker](https://docs.docker.com/) é uma das formas mais simples para rodar as dependências localmente, além de gerar uma facilidade de deploy em gerenciadores de container
+- [SpotBugs](https://spotbugs.github.io/) ferramenta de análise estática de código leve que roda no build do gradle
+- [Gatling](http://gatling.io/) ferramenta de teste de performance que usa DSLs escritas em scala, com grande poder de processamento e geração de relatórios dos testes
+- [Prometheus](https://prometheus.io/) para telemetria
+- [Micrometer](https://micrometer.io/) para expor as métricas no formato prometheus
 
 #### Versionamento de APIs
 

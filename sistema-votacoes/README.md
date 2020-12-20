@@ -29,6 +29,10 @@ docker build -t hstreb/sistema-votacoes:0.0.1 .
 docker-compose up -d
 ```
 
+## Documentação da API
+
+A documentação da API segue o padrão OpenAPI e fica disponível no endereço http://localhost:8080/swagger-ui.
+
 ## Chamadas de exemplo
 
 - criar uma pauta, abrir a votação, executar 1000 votos com cpfs aleatórios e encerrar a votação
