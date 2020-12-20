@@ -1,8 +1,10 @@
-version: '3'
+version: '2'
 
 services:
   postgresql:
-    image: postgres:12.3-alpine
+    image: postgres:13.1-alpine
+    hostname: postgresql
+    container_name: postgresql
     environment:
       - POSTGRES_USER=votacao
       - POSTGRES_PASSWORD=votacao123
@@ -11,8 +13,9 @@ services:
       - "5432:5432"
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.5.0
+    image: confluentinc/cp-zookeeper:6.0.1
     hostname: zookeeper
+    container_name: zookeeper
     ports:
       - "2181:2181"
     environment:
@@ -20,13 +23,15 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-kafka:5.5.0
+    image: confluentinc/cp-kafka:6.0.1
     hostname: kafka
+    container_name: kafka
     depends_on:
       - zookeeper
     ports:
       - "29092:29092"
       - "9092:9092"
+      - "9101:9101"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
@@ -36,3 +41,20 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_JMX_PORT: 9101
+      KAFKA_JMX_HOSTNAME: localhost
+
+  sistema-votacoes:
+    image: hstreb/sistema-votacoes:0.0.1
+    hostname: sistema-votacoes
+    container_name: sistema-votacoes
+    depends_on:
+      - postgresql
+      - kafka
+      - zookeeper
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/votacoes
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+

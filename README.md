@@ -85,7 +85,7 @@ PATCH /v1/votacoes/{votacao}
 ```
 POST /v1/votacoes/{votacao}/votos
 {
-    "id": "4cabf124-8d2e-4c9f-bc47-40ba12327b28",
+    "id": "01234567890",
     "voto": "SIM"
 }
 ```
@@ -111,18 +111,50 @@ resposta:
 }
 ```
 
-curl --header "Content-Type: application/json" \
---request POST \
---data '{"pauta":"pauta teste"}' \
-http://localhost:8080/v1/votacoes
+# Criação e Execução
 
+- dependências:
+  - [java 11](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+  - [docker](https://docs.docker.com/)
+  - [docker-compose](https://docs.docker.com/compose/)
+  - [curl](https://curl.se/)
+  - [jq](https://stedolan.github.io/jq/)
 
-curl --header "Content-Type: application/json" \
---request PATCH \
---data '{"estado":"EM_ANDAMENTO","duracao":1}' \
-http://localhost:8080/v1/votacoes/de5908a4-d649-4d98-aa2f-ba9ab26d02f8
+- construir o projeto:
 
-curl --header "Content-Type: application/json" \
---request POST \
---data '{"associado":"19839091069","escolha":"SIM"}' \
-http://localhost:8080/v1/votacoes/de5908a4-d649-4d98-aa2f-ba9ab26d02f8/votos
+```shell
+./gradlew clean build
+```
+
+- construir a imagem docker:
+
+```shell
+docker build -t hstreb/sistema-votacoes:0.0.1 .
+```
+
+- executar a aplicação
+
+```shell
+docker-compose up -d
+```
+
+- criar uma pauta, abrir a votação, executar 1000 votos com cpfs aleatórios e encerrar a votação
+```shell
+ID=$(curl --header "Content-Type: application/json" --request POST --data '{"pauta":"pauta teste"}' http://localhost:8080/v1/votacoes | jq -r '.id')
+curl --header "Content-Type: application/json" --request PATCH --data '{"estado":"EM_ANDAMENTO","duracao":1}' http://localhost:8080/v1/votacoes/$ID
+for i in {1..1000}; do \
+    CPF=$(curl 'https://www.4devs.com.br/ferramentas_online.php' --data-raw 'acao=gerar_cpf&pontuacao=N');
+    curl -i --header "Content-Type: application/json" --request POST --data '{"associado":"'$CPF'","escolha":"SIM"}' http://localhost:8080/v1/votacoes/$ID/votos;
+done
+curl -i --header "Content-Type: application/json" --request PATCH --data '{"estado":"ENCERRADA"}' http://localhost:8080/v1/votacoes/$ID
+```
+
+- acompanhar os eventos gerados no kafka executar em terminais diferentes
+
+```shell
+kafka-console-consumer --topic votacoes --bootstrap-server localhost:9092
+```
+
+```shell
+kafka-console-consumer --topic votos --bootstrap-server localhost:9092
+```
