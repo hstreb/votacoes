@@ -57,9 +57,19 @@ curl https://user-info.herokuapp.com/users/19839091069
 - **Gradle** maior velocidade para baixar as dependências, simplicidade da DSL em groovy vs XML do Maven
 - **Spring Boot** é um dos frameworks mais utilizado para criação de microservices atualmente
 - **PostgreSQL** é open source, maduro e com grande utilização
+- **Liquibase** foi utilizado para migração de schema do banco de dados, foi escolhido por possuir rollback gratuíto em relação ao flyway
 - **Kafka** é uma das ferramentas mais utilizadas para mensageria e big data
 - **Docker** é uma das formas mais simples para rodar as dependências localmente, além de gerar uma facilidade de deploy em gerenciadores de container
 - **SpotBugs** ferramenta de análise estática de código leve que roda no build do gradle
+- **Gatling** ferramenta de teste de performance que usa DSLs escritas em scala, com grande poder de processamento e geração de relatórios dos testes
+
+#### Versionamento de APIs
+
+A opção adotada para versionar as APIs, foi a utilização de um número no path, ex. `/v1/votacoes` que é simples de implemtar e tem grande utilização.
+
+Para alterar esse número é preciso uma "quebra de contrato", que ocorre quando: são adionados ou alterados campos obrigatórios no corpo, nos cabeçalho ou nos parêmetros da requisição e são alterados os caminhos da requisição.
+
+Alterações em campos não obrigatórios podem não necessitar de evolução da versão, pode depender da complexidade da mudança e da utilização pelos clientes
 
 ### Exemplo de endpoints
 
@@ -113,4 +123,4 @@ resposta:
 
 ### Os projetos
 
-O projeto [sistema-votacao](./sistema-votacao/README.md)
+O projeto [sistema-votacao](./sistema-votacao/README.md) contém o código a aplicação e o projeto [sistema-votacao-load-test](./sistema-votacao-load-test/README.md) possui o código dos testes de performance.
