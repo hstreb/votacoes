@@ -33,6 +33,10 @@ docker-compose up -d
 
 A documentação da API segue o padrão OpenAPI e fica disponível no endereço http://localhost:8080/swagger-ui.
 
+## Telemetria
+
+A telemetria do projeto usa o formato do [prometheus](https://prometheus.io/) e é exposta pelo micrometer, ficando disponível no endereço http://localhost:8080/management/prometheus.
+
 ## Chamadas de exemplo
 
 - criar uma pauta, abrir a votação, executar 1000 votos com cpfs aleatórios e encerrar a votação
@@ -49,9 +53,9 @@ curl -i --header "Content-Type: application/json" --request PATCH --data '{"esta
 - acompanhar os eventos gerados no kafka executar em terminais diferentes
 
 ```shell
-kafka-console-consumer --topic votacoes --bootstrap-server localhost:9092
+docker exec kafka kafka-console-consumer --topic votacoes --bootstrap-server localhost:9092
 ```
 
 ```shell
-kafka-console-consumer --topic votos --bootstrap-server localhost:9092
+docker exec kafka kafka-console-consumer --topic votos --bootstrap-server localhost:9092
 ```
