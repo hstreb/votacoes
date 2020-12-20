@@ -123,4 +123,4 @@ resposta:
 
 ### Os projetos
 
-O projeto [sistema-votacao](./sistema-votacao/README.md) contém o código a aplicação e o projeto [sistema-votacao-load-test](./sistema-votacao-load-test/README.md) possui o código dos testes de performance.
+O projeto **sistema-votacao** contém o código a aplicação e o projeto **sistema-votacao-load-test** possui o código dos testes de performance.
