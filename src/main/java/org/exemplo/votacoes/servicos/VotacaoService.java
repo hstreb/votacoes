@@ -65,10 +65,10 @@ public class VotacaoService {
         LOGGER.info("Iniciando novo voto: {}, {}, {}", idVotacao, associado, escolha);
         validar(idVotacao, associado);
         var voto = new Voto(idVotacao, associado, escolha);
-        var votoComputado = votoRepository.salvar(voto);
-        votoProducer.enviar(voto);
         var votacao = votacaoRepository.buscarPorId(idVotacao)
                 .votar(escolha);
+        var votoComputado = votoRepository.salvar(voto);
+        votoProducer.enviar(voto);
         votacaoRepository.salvar(votacao);
         LOGGER.info("Voto computado: {}", votoComputado);
         return votoComputado;

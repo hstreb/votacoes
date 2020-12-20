@@ -218,19 +218,13 @@ class VotacaoServiceTest {
 
     @Test
     void nao_deve_votar_em_votacao_finalizada() throws VotacaoException {
-        var votoEsperado = new Voto(ID, ASSOCIADO, NAO);
         given(associadoClient.verificar(ASSOCIADO))
                 .willReturn(ASSOCIADO_HABILITADO);
-        given(votoRepository.salvar(any()))
-                .willReturn(votoEsperado);
-        doNothing().when(votoProducer).enviar(any());
         given(votacaoRepository.buscarPorId(ID))
                 .willReturn(VOTACAO_EM_ANDAMENTO_HORARIO_FINALIZADO);
 
         assertThatThrownBy(() -> votacaoService.votar(ID, ASSOCIADO, NAO))
                 .isInstanceOf(VotacaoException.class)
                 .hasMessage("Votação " + ID + " encerrada!");
-        verify(votoProducer, times(1))
-                .enviar(any());
     }
 }

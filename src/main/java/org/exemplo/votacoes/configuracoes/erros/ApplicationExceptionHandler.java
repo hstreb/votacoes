@@ -30,35 +30,35 @@ public class ApplicationExceptionHandler {
     @ExceptionHandler(VotacaoNaoEncontradaException.class)
     @ResponseStatus(NOT_FOUND)
     public ResponseEntity<MensagemErro> notFound(VotacaoNaoEncontradaException exception, HttpServletRequest request) {
-        LOGGER.error("", exception);
+        LOGGER.error("", exception.getMessage());
         return retorno("Não encontrado", exception.getMessage(), request, NOT_FOUND);
     }
 
     @ExceptionHandler(VotoJaContabilizadoException.class)
     @ResponseStatus(CONFLICT)
     public ResponseEntity<MensagemErro> business(VotoJaContabilizadoException exception, HttpServletRequest request) {
-        LOGGER.error("", exception);
+        LOGGER.error("", exception.getMessage());
         return retorno("Conflito", exception.getMessage(), request, CONFLICT);
     }
 
     @ExceptionHandler(AssociadoNaoHabilitadoException.class)
     @ResponseStatus(FORBIDDEN)
     public ResponseEntity<MensagemErro> business(AssociadoNaoHabilitadoException exception, HttpServletRequest request) {
-        LOGGER.error("", exception);
+        LOGGER.error("", exception.getMessage());
         return retorno("Não permitido", exception.getMessage(), request, FORBIDDEN);
     }
 
     @ExceptionHandler(VotacaoException.class)
     @ResponseStatus(BAD_REQUEST)
     public ResponseEntity<MensagemErro> business(VotacaoException exception, HttpServletRequest request) {
-        LOGGER.error("", exception);
+        LOGGER.error("", exception.getMessage());
         return retorno("Erro na requisição", exception.getMessage(), request, BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<MensagemErro> regrasValidacao(ConstraintViolationException exception, HttpServletRequest request) {
-        LOGGER.error("", exception);
+        LOGGER.error("", exception.getMessage());
         var mensagem = exception.getConstraintViolations()
                 .stream()
                 .map(ConstraintViolation::getMessage)
@@ -69,7 +69,7 @@ public class ApplicationExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<MensagemErro> argumentosNaoValidos(MethodArgumentNotValidException exception, HttpServletRequest request) {
-        LOGGER.error("", exception);
+        LOGGER.error("", exception.getMessage());
         var mensagem = exception.getBindingResult().getFieldErrors()
                 .stream()
                 .map(FieldError::getDefaultMessage)
@@ -80,7 +80,7 @@ public class ApplicationExceptionHandler {
     @ExceptionHandler(FeignException.NotFound.class)
     @ResponseStatus(NOT_FOUND)
     public ResponseEntity<MensagemErro> interno(FeignException.NotFound exception, HttpServletRequest request) {
-        LOGGER.error("", exception);
+        LOGGER.error("", exception.getMessage());
         return retorno("Não encontrado", "Associado não encontrado!", request, NOT_FOUND);
     }
 

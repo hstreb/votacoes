@@ -16,12 +16,12 @@
   - adicionar tratamentos de erros com base nas exceptions de negócio ✔
 - adicionar database real ✔
   - adicionar suporte a evolução de esquema ✔
-- adicionar chamada real ao serviço de associados
-- adicionar mensageria
-  - escrever votos
-  - escrever votação encerrada
+- adicionar chamada real ao serviço de associados ✔
+- adicionar mensageria ✔
+  - escrever votos ✔
+  - escrever votações ✔
 - criar teste de performance
 - extras:
-  - telemetria
-  - processar a votação com event sourcing 
-  - programação reativa
+  - telemetria ✔
+  - ~~processar a votação com event sourcing~~ 
+  - ~~programação reativa~~
