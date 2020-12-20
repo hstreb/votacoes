@@ -20,7 +20,7 @@
 - adicionar mensageria ✔
   - escrever votos ✔
   - escrever votações ✔
-- criar teste de performance
+- criar teste de performance ✔
 - extras:
   - telemetria ✔
   - ~~processar a votação com event sourcing~~ 
