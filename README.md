@@ -105,13 +105,13 @@ POST /v1/votacoes/{votacao}/votos
 ```
 PATCH /v1/votacoes/{votacao}
 {
-    "estado": "FINALIZADA"
+    "estado": "ENCERRADA"
 }
 resposta:
 {
     "id": "51a55b51-8a1c-4417-9f69-ec636bf1fb12",
     "descricao": "",
-    "estado": "FINALIZADA",
+    "estado": "ENCERRADA",
     "duracao": 1,
     "resultado": {
         "sim": 120,
