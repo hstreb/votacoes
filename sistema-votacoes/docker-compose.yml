@@ -44,6 +44,15 @@ services:
       KAFKA_JMX_PORT: 9101
       KAFKA_JMX_HOSTNAME: localhost
 
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    hostname: jaeger
+    container_name: jaeger
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+
   sistema-votacoes:
     image: hstreb/sistema-votacoes:0.0.1
     hostname: sistema-votacoes

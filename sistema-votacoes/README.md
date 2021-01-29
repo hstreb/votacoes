@@ -37,6 +37,8 @@ A documentação da API segue o padrão OpenAPI e fica disponível no endereço 
 
 A telemetria do projeto usa o formato do [prometheus](https://prometheus.io/) e é exposta pelo micrometer, ficando disponível no endereço http://localhost:8080/management/prometheus.
 
+Para o trace distribuído foi usado o [opentelemetry](https://opentelemetry.io/) com um agente java enviando para o [Jaeger](https://www.jaegertracing.io/) que esta disponível no endereço http://localhost:16686/.
+
 ## Chamadas de exemplo
 
 - criar uma pauta, abrir a votação, executar 1000 votos com cpfs aleatórios e encerrar a votação
